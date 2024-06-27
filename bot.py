@@ -7,7 +7,6 @@ from tg_bot.handlers import register_handlers
 storage = MemoryStorage()
 logger = logging.getLogger(__name__)
 
-
 def register_all_handlers(dp):
     register_handlers(dp)
 
