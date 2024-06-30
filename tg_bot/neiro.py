@@ -1,0 +1,3 @@
+def OpenVoice(path, text):
+    ...
+    return "tg_bot/voices/moriarty.wav"
