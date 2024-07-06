@@ -7,7 +7,7 @@ from tg_bot.states import user
 from tg_bot.neiro import OpenVoice
 import os, string, random
 
-from aiogram.utils.deep_linking import get_start_link, decode_payload
+from aiogram.utils.deep_linking import decode_payload
 
 names_js = {
     "markaryan": "Маркарян",
@@ -18,7 +18,7 @@ names_js = {
     "drevniy": "Древний Рус"
 }
 def register_handlers(dp: Dispatcher):
-    dp.register_message_handler(cmd_start, commands=["start"], state = None)
+    dp.register_message_handler(cmd_start, commands=["start"], state = "*")
     dp.register_message_handler(my_voice_step1, content_types=types.ContentType.VOICE, state = user.my_voice_voice)
     dp.register_message_handler(my_voice_step2, state = user.my_voice_text)
     dp.register_message_handler(pers_final, state = user.curr_text)
@@ -39,8 +39,7 @@ async def cmd_start(message: types.Message, state: FSMContext): #start command
 
 
 async def subscriber_check(id, msg: types.Message): #проверка на то, саб ли человек - НЕ ХЭНДЛЕР!!!!
-    data = await msg.bot.get_chat_member(chat_id="@fjhjfefhfjhefhk", user_id= id)
-    print(data["status"])
+    data = await msg.bot.get_chat_member(chat_id="@voicefusion", user_id= id)
     res = data["status"] != "left"
     if not res:
         await msg.answer("Для продолжения работы в боте, подпишитесь на наш канал @voicefusion", reply_markup= subscribe_kb())
@@ -57,7 +56,7 @@ async def home(call: types.CallbackQuery, state: FSMContext): #tohome
 
 
 async def check_sub(call: types.CallbackQuery, state: FSMContext): #check sub from reply_markup
-    data = await call.message.bot.get_chat_member(chat_id="@fjhjfefhfjhefhk", user_id= call.from_user.id)
+    data = await call.message.bot.get_chat_member(chat_id="@voicefusion", user_id= call.from_user.id)
     if data["status"] != "left":
         await call.message.edit_text("Благодарим за подписку. Теперь можно продолжить)", reply_markup=None)
         voices = get_voices_string(call.message.chat.id)
@@ -80,7 +79,7 @@ async def my_voice_step1(message: types.Message, state: FSMContext):
         await state.finish()
         return
     if message.voice.duration < 5 or message.voice.duration > 180:
-        await message.answer("мГолосовое должно быть от 5 секунд до 3 минут❗")
+        await message.answer("Голосовое должно быть от 5 секунд до 3 минут❗")
         return
     
     def generate_random_string(length):
@@ -96,18 +95,19 @@ async def my_voice_step1(message: types.Message, state: FSMContext):
     await message.voice.download(f"tg_bot/user_models/{name}")
     await message.answer("Хорошо, теперь пришлите мне текст для озвучки длиной не менее 10 и не более 300 символов 👇")
     await user.my_voice_text.set()
-    minus_voice(message.chat.id, 6)
 
 
 async def my_voice_step2(message: types.Message, state: FSMContext):
     if len(message.text) < 10 or len(message.text) > 300:
         await message.answer("❗Длина сообщения должна быть не менее 10 и не более 300 символов❗")
         return
-    await state.finish()
+    wait = await message.answer("Генерирую голосовое, подождите немного...")
     async with state.proxy() as data:
         res = await OpenVoice(data["name"], message.text)
-        with open(res, "rb") as voice:
-            await message.bot.send_voice(voice = voice, chat_id= message.chat.id)
+        await message.bot.send_voice(voice = InputFile(res[0]), chat_id= message.chat.id, duration= res[1])
+        minus_voice(message.chat.id, 6)
+    await state.finish()
+
     
 
 
@@ -141,8 +141,10 @@ async def pers_final(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         pers = data["pers"]
     await state.finish()
+    wait = await message.answer("Генерирую голосовое, подождите немного...")
     minus_voice(message.chat.id, 1)
     res = await OpenVoice(pers, message.text)
     await message.bot.send_voice(voice = InputFile(res[0]), chat_id= message.chat.id, duration= res[1])
+    await wait.delete()
 
 
