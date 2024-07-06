@@ -1,1 +1,3 @@
 from .user_handlers import register_handlers
+from .user_payment import register_payment_handlers
+from .admin_handlers import register_admin_handlers

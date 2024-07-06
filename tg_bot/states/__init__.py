@@ -1,1 +1,1 @@
-from .user_states import user
+from .user_states import user, admin
