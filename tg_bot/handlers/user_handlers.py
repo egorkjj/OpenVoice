@@ -106,6 +106,7 @@ async def my_voice_step2(message: types.Message, state: FSMContext):
         res = await OpenVoice(data["name"], message.text)
         await message.bot.send_voice(voice = InputFile(res[0]), chat_id= message.chat.id, duration= res[1])
         minus_voice(message.chat.id, 6)
+        await wait.delete()
     await state.finish()
 
     
