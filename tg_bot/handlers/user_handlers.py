@@ -33,15 +33,15 @@ def register_handlers(dp: Dispatcher):
 async def cmd_start(message: types.Message, state: FSMContext): #start command
     args = message.get_args()
     reference = decode_payload(args)
+
     voices = get_voices_string(message.chat.id)
-    
-    res = get_start_msg(message.chat.id, message)
+
+    res = get_start_msg(message.chat.id)
     start_msg = await message.answer(f"🎁 Разыграйте друзей, озвучив текст любым голосом!\n\n🎤 Воспользуйтесь озвучкой по персонажам или просто отправьте мне любое голосовое сообщение!\n\nБаланс: {voices} 🎙\n\nОбновления и бесплатные войсы в нашем канале 👉 @voicefusion", reply_markup= start_kb())
     if res != None:
         await message.bot.delete_message(message.chat.id, res)
         replace_id(message.chat.id, start_msg.message_id)
     add_new(message, reference, start_msg.message_id)
-
 
 
 async def subscriber_check(id, msg: types.Message): #проверка на то, саб ли человек - НЕ ХЭНДЛЕР!!!!
