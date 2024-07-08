@@ -19,6 +19,8 @@ class User(Base):
     voices = Column(Integer, nullable=True)
     referal = Column(Text, nullable=True)
     is_ref_voices = Column(Boolean, nullable=True)
+    is_buy = Column(Boolean, nullable=True)
+    start_msg = Column(Integer, nullable=True)
 
 class Promos(Base):
     __tablename__ = "promos"
@@ -27,11 +29,11 @@ class Promos(Base):
     activations = Column(Integer, nullable=True)
     gift = Column(Integer, nullable=True)
 
-def add_new(message: Message, referal):
+def add_new(message: Message, referal, start_msg):
     Session = sessionmaker()
     session = Session(bind = engine)
     try:
-        new = User(username = message.from_user.username, chat_id = message.chat.id, voices = 10, is_ref_voices = False)
+        new = User(username = message.from_user.username, chat_id = message.chat.id, voices = 10, is_ref_voices = False, referal = referal, start_msg = start_msg)
         session.add(new)
         session.commit()
     except:
@@ -80,6 +82,7 @@ def up_voices(chat_id, amount: int):
     curr = session.query(User).filter(User.chat_id == chat_id).first()
     res = curr.voices
     curr.voices = res + amount
+    curr.is_buy = True
     session.commit()
     session.close()
 
@@ -137,5 +140,33 @@ def all_promo():
     allp = session.query(Promos).all()
     session.close()
     return allp
+
+def is_buy(chat_id):
+    Session = sessionmaker()
+    session = Session(bind = engine)
+    curr = session.query(User).filter(User.chat_id == chat_id).first()
+    is_by = curr.is_buy
+    session.close()
+    return is_by
+
+def get_start_msg(chat_id):
+    Session = sessionmaker()
+    session = Session(bind = engine)
+    curr = session.query(User).filter(User.chat_id == chat_id).first()
+    if curr is None:
+        session.close()
+        return None
+    id = curr.start_msg
+    session.close()
+    return id
+
+def replace_id(chat_id, message_id):
+    Session = sessionmaker()
+    session = Session(bind = engine)
+    curr = session.query(User).filter(User.chat_id == chat_id).first()
+    curr.start_msg = message_id
+    session.commit()
+    session.close()
+
 Base.metadata.create_all(engine)
 

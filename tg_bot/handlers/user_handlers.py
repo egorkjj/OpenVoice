@@ -1,8 +1,8 @@
 from aiogram import Dispatcher,types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import InputFile
-from tg_bot.keyboards import start_kb, subscribe_kb, tohome_kb, pers_kb, sell_kb, deeplink_kb
-from tg_bot.DBSM import get_voices, minus_voice, add_new, get_voices_string
+from tg_bot.keyboards import start_kb, subscribe_kb, tohome_kb, pers_kb, sell_kb
+from tg_bot.DBSM import get_voices, minus_voice, add_new, get_voices_string, is_buy, get_start_msg, replace_id
 from tg_bot.states import user
 from tg_bot.neiro import OpenVoice
 import os, string, random
@@ -33,9 +33,15 @@ def register_handlers(dp: Dispatcher):
 async def cmd_start(message: types.Message, state: FSMContext): #start command
     args = message.get_args()
     reference = decode_payload(args)
-    add_new(message, reference)
     voices = get_voices_string(message.chat.id)
-    await message.answer(f"🎁 Разыграйте друзей, озвучив текст любым голосом!\n\n🎤 Воспользуйтесь озвучкой по персонажам или просто отправьте мне любое голосовое сообщение!\n\nБаланс: {voices} 🎙\nУ вас стандартный доступ к боту 👨‍💻\n\nОбновления и бесплатные войсы в нашем канале 👉 @voicefusion", reply_markup= start_kb())
+    
+    res = get_start_msg(message.chat.id, message)
+    start_msg = await message.answer(f"🎁 Разыграйте друзей, озвучив текст любым голосом!\n\n🎤 Воспользуйтесь озвучкой по персонажам или просто отправьте мне любое голосовое сообщение!\n\nБаланс: {voices} 🎙\n\nОбновления и бесплатные войсы в нашем канале 👉 @voicefusion", reply_markup= start_kb())
+    if res != None:
+        await message.bot.delete_message(message.chat.id, res)
+        replace_id(message.chat.id, start_msg.message_id)
+    add_new(message, reference, start_msg.message_id)
+
 
 
 async def subscriber_check(id, msg: types.Message): #проверка на то, саб ли человек - НЕ ХЭНДЛЕР!!!!
@@ -52,15 +58,13 @@ async def home(call: types.CallbackQuery, state: FSMContext): #tohome
     if await state.get_state() != "user:my_voice_text":
         await state.finish()
     voices = get_voices_string(call.message.chat.id)
-    await call.message.edit_text(f"🎁 Разыграйте друзей, озвучив текст любым голосом!\n\n🎤 Воспользуйтесь озвучкой по персонажам или просто отправьте мне любое голосовое сообщение!\n\nБаланс: {voices} 🎙\nУ вас стандартный доступ к боту 👨‍💻\n\nОбновления и бесплатные войсы в нашем канале 👉 @voicefusion", reply_markup= start_kb())
+    await call.message.edit_text(f"🎁 Разыграйте друзей, озвучив текст любым голосом!\n\n🎤 Воспользуйтесь озвучкой по персонажам или просто отправьте мне любое голосовое сообщение!\n\nБаланс: {voices} 🎙\n\nОбновления и бесплатные войсы в нашем канале 👉 @voicefusion", reply_markup= start_kb())
 
 
 async def check_sub(call: types.CallbackQuery, state: FSMContext): #check sub from reply_markup
     data = await call.message.bot.get_chat_member(chat_id="@voicefusion", user_id= call.from_user.id)
     if data["status"] != "left":
         await call.message.edit_text("Благодарим за подписку. Теперь можно продолжить)", reply_markup=None)
-        voices = get_voices_string(call.message.chat.id)
-        await call.message.answer(f"🎁 Разыграйте друзей, озвучив текст любым голосом!\n\n🎤 Воспользуйтесь озвучкой по персонажам или просто отправьте мне любое голосовое сообщение!\n\nБаланс: {voices} 🎙\nУ вас стандартный доступ к боту 👨‍💻\n\nОбновления и бесплатные войсы в нашем канале 👉 @voicefusion", reply_markup= start_kb())
     else:
         await call.message.edit_text("К сожалению, вы еще не подписаны(\nДля продолжения работы в боте, подпишись на наш канал @voicefusion", reply_markup=subscribe_kb())
 
@@ -104,9 +108,14 @@ async def my_voice_step2(message: types.Message, state: FSMContext):
     wait = await message.answer("Генерирую голосовое, подождите немного...")
     async with state.proxy() as data:
         res = await OpenVoice(data["name"], message.text)
-        await message.bot.send_voice(voice = InputFile(res[0]), chat_id= message.chat.id, duration= res[1])
+        if is_buy(message.chat.id):
+            await message.bot.send_voice(voice = InputFile(res[0]), chat_id= message.chat.id, duration= res[1])
+        else:
+            await message.bot.send_voice(voice = InputFile(res[0]), chat_id= message.chat.id, duration= res[1], caption= "Озвучено в @VoiceFusionBot.\n\n<i>Убрать подпись можно купив любой пакет войсов</i>")
         minus_voice(message.chat.id, 6)
         await wait.delete()
+        voices = get_voices_string(message.chat.id)
+        await message.answer(f"Ваш баланс - {voices} 🎙.\nДля вызова главного меню введите /start")
     await state.finish()
 
     
@@ -145,7 +154,13 @@ async def pers_final(message: types.Message, state: FSMContext):
     wait = await message.answer("Генерирую голосовое, подождите немного...")
     minus_voice(message.chat.id, 1)
     res = await OpenVoice(pers, message.text)
-    await message.bot.send_voice(voice = InputFile(res[0]), chat_id= message.chat.id, duration= res[1])
+    if is_buy(message.chat.id):
+        await message.bot.send_voice(voice = InputFile(res[0]), chat_id= message.chat.id, duration= res[1])
+    else:
+        await message.bot.send_voice(voice = InputFile(res[0]), chat_id= message.chat.id, duration= res[1], caption= "Озвучено в @VoiceFusionBot.\n\n<i>Убрать подпись можно купив любой пакет войсов</i>")
     await wait.delete()
+    voices = get_voices_string(message.chat.id)
+    await message.answer(f"Ваш баланс - {voices} 🎙.\nДля вызова главного меню введите /start")
+
 
 

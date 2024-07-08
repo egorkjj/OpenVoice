@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from tg_bot.config import load_config
 from tg_bot.handlers import register_handlers, register_payment_handlers, register_admin_handlers
@@ -24,6 +24,10 @@ async def main() -> None:
     dp.storage = storage
     bot['config'] = config
     register_all_handlers(dp)
+    commands = [
+        types.BotCommand(command="/start", description="Главное меню"),
+    ]
+    await bot.set_my_commands(commands)
     while True:
         try:
             await dp.start_polling()

@@ -31,8 +31,11 @@ def pers_kb():
 
 def payment_keyboard():
     kb = InlineKeyboardMarkup()
-    kb.add(InlineKeyboardButton(text="Купить 20 🎙 за 1 🌟", callback_data= "invoice_20_1"))
-    kb.add(InlineKeyboardButton(text="Купить 50 🎙 за 2 🌟", callback_data="invoice_50_2"))
+    kb.add(InlineKeyboardButton(text="Купить 6 🎙 за 50 🌟", callback_data= "invoice_6_50"))
+    kb.add(InlineKeyboardButton(text="Купить 10 🎙 за 75 🌟", callback_data= "invoice_10_75"))
+    kb.add(InlineKeyboardButton(text="Купить 50 🎙 за 250 🌟", callback_data= "invoice_50_250"))
+    kb.add(InlineKeyboardButton(text="Купить 200 🎙 за 750 🌟", callback_data= "invoice_200_750"))
+    kb.add(InlineKeyboardButton(text="Купить 1000 🎙 за 2500 🌟", callback_data= "invoice_1000_2500"))
     kb.add(InlineKeyboardButton(text="Главное меню 🏠", callback_data="home"))
     kb.add(InlineKeyboardButton(text = "Получить войсы ➕ ", callback_data="reflink"))
     return kb
