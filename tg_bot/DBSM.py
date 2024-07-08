@@ -66,6 +66,9 @@ def get_voices_string(chat_id):
     Session = sessionmaker()
     session = Session(bind = engine)
     curr = session.query(User).filter(User.chat_id == chat_id).first()
+    if curr is None:
+        session.close()
+        return "10 войсов"
     res = curr.voices
     session.close()
     if res % 10 == 1:
