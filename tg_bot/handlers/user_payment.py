@@ -19,7 +19,7 @@ def register_payment_handlers(dp: Dispatcher):
     dp.register_message_handler(succesfull_pay, content_types= ContentType.SUCCESSFUL_PAYMENT)
 
 async def start_payment(call: types.CallbackQuery, state: FSMContext):
-    await call.message.edit_text("Выберите инетресующий вас тариф", reply_markup= payment_keyboard())
+    await call.message.edit_text("Выберите интересующий вас тариф", reply_markup= payment_keyboard())
     
 async def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery):
     await pre_checkout_query.bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)

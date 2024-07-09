@@ -19,7 +19,7 @@ def tohome_kb():
     return kb
 
 def pers_kb():
-    kb = InlineKeyboardMarkup()
+    kb = InlineKeyboardMarkup(row_width=2)
     kb.add(InlineKeyboardButton(text="Бурунов 👤", callback_data="curr_burunov"))
     kb.add(InlineKeyboardButton(text="Древний Рус 👤", callback_data="curr_drevniy"))
     kb.add(InlineKeyboardButton(text="Мориарти 👤", callback_data="curr_moriarty"))
