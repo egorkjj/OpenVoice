@@ -20,12 +20,15 @@ def tohome_kb():
 
 def pers_kb():
     kb = InlineKeyboardMarkup(row_width=2)
-    kb.add(InlineKeyboardButton(text="Бурунов 👤", callback_data="curr_burunov"))
-    kb.add(InlineKeyboardButton(text="Древний Рус 👤", callback_data="curr_drevniy"))
-    kb.add(InlineKeyboardButton(text="Мориарти 👤", callback_data="curr_moriarty"))
-    kb.add(InlineKeyboardButton(text="Маркарян 👤", callback_data="curr_markaryan"))
-    kb.add(InlineKeyboardButton(text="Путин 👤", callback_data="curr_putin"))
-    kb.add(InlineKeyboardButton(text="Пригожин 👤", callback_data="curr_prigozhin"))
+    kb.row(InlineKeyboardButton(text="Бурунов 👤", callback_data="curr_burunov"), InlineKeyboardButton(text="Древний Рус 👤", callback_data="curr_drevniy"))
+    # kb.add(InlineKeyboardButton(text="Бурунов 👤", callback_data="curr_burunov"))
+    # kb.add(InlineKeyboardButton(text="Древний Рус 👤", callback_data="curr_drevniy"))
+    kb.row(InlineKeyboardButton(text="Мориарти 👤", callback_data="curr_moriarty"), InlineKeyboardButton(text="Маркарян 👤", callback_data="curr_markaryan"))
+    # kb.add(InlineKeyboardButton(text="Мориарти 👤", callback_data="curr_moriarty"))
+    # kb.add(InlineKeyboardButton(text="Маркарян 👤", callback_data="curr_markaryan"))
+    kb.row(InlineKeyboardButton(text="Путин 👤", callback_data="curr_putin"), InlineKeyboardButton(text="Пригожин 👤", callback_data="curr_prigozhin"))
+    # kb.add(InlineKeyboardButton(text="Путин 👤", callback_data="curr_putin"))
+    # kb.add(InlineKeyboardButton(text="Пригожин 👤", callback_data="curr_prigozhin"))
     kb.add(InlineKeyboardButton(text="Главное меню 🏠", callback_data="home"))
     return kb
 
