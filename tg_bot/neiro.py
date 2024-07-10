@@ -2,13 +2,12 @@ from elevenlabs.client import AsyncElevenLabs, ElevenLabs
 from elevenlabs import save
 import elevenlabs, string, random, os
 from tinytag import TinyTag
-import asyncio
 
 
 async def OpenVoice(filename: str, text): #filename: str, text
 
     client = AsyncElevenLabs(
-        api_key="sk_9ef1d1a67b8d7c28ddaf1e2515f8a95b67f9ea471d797274", 
+        api_key="sk_2dc9bf9826b00d56293e264d9a04540eb59584e84af7f79e" #"sk_9ef1d1a67b8d7c28ddaf1e2515f8a95b67f9ea471d797274", 
     )
     
     voice = await client.clone(name = "Jhon", description="Desc", files=[filename], labels = {})

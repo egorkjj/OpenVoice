@@ -115,7 +115,7 @@ async def my_voice_step2(message: types.Message, state: FSMContext):
         minus_voice(message.chat.id, 6)
         await wait.delete()
         voices = get_voices_string(message.chat.id)
-        await message.answer(f"Ваш баланс - {voices} 🎙.\nДля вызова главного меню введите /start")
+        await message.answer(f"Ваш баланс - {voices} 🎙.\nДля вызова главного меню введите\n/start")
     await state.finish()
 
     
