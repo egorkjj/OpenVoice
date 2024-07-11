@@ -1,7 +1,7 @@
 from elevenlabs.client import AsyncElevenLabs
 import elevenlabs, string, random, os
 from tinytag import TinyTag
-from DBSM import all_token_for_neiro, disable_token
+from tg_bot.DBSM import all_token_for_neiro, disable_token
 
 async def OpenVoice(filename: str, text): #filename: str, text
     tokens = all_token_for_neiro()
