@@ -80,5 +80,6 @@ def admin_kb():
 
 def token_kb():
     kb = InlineKeyboardMarkup()
-    kb.add(InlineKeyboardButton(text = "Добавить токен", callback_data= "add_token"))
+    kb.add(InlineKeyboardButton(text = "Добавить токен", callback_data= "admin_addtoken"))
+    return kb
 
