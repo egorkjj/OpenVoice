@@ -75,6 +75,10 @@ def admin_kb():
     kb.add(InlineKeyboardButton(text="Добавить промокод", callback_data="admin_promo"))
     kb.add(InlineKeyboardButton(text="Начислением 🎙 пользователям", callback_data="admin_bonus"))
     kb.add(InlineKeyboardButton(text="Все промокоды", callback_data="admin_promos"))
-
+    kb.add(InlineKeyboardButton(text = "Управление токенами", callback_data= "admin_tokens"))
     return kb
+
+def token_kb():
+    kb = InlineKeyboardMarkup()
+    kb.add(InlineKeyboardButton(text = "Добавить токен", callback_data= "add_token"))
 

@@ -17,7 +17,9 @@ names_js = {
     "prigozhin": "Пригожин",
     "drevniy": "Древний Рус"
 }
+
 def register_handlers(dp: Dispatcher):
+
     dp.register_message_handler(cmd_start, commands=["start"], state = "*")
     dp.register_message_handler(my_voice_step1, content_types=types.ContentType.VOICE, state = user.my_voice_voice)
     dp.register_message_handler(my_voice_step2, state = user.my_voice_text)

@@ -1,8 +1,8 @@
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
 from aiogram.types.message import ContentType
-from tg_bot.keyboards import admin_kb
-from tg_bot.DBSM import all_user_list, bonus, add_promo, all_promo
+from tg_bot.keyboards import admin_kb, token_kb
+from tg_bot.DBSM import all_user_list, bonus, add_promo, all_promo, all_token, add_token
 from tg_bot.states import admin
 
 admin_ids = [441487518,861756342,759553639,1441962095, 759553639]
@@ -19,6 +19,7 @@ def register_admin_handlers(dp: Dispatcher):
     dp.register_message_handler(promo_step2, state = admin.promo_act)
     dp.register_message_handler(promo_step3, state = admin.promo_gift)
 
+    dp.register_message_handler(token_proc, state = admin.token)
 
 async def start_admin(message: types.Message, state: FSMContext):
     await state.finish()
@@ -51,6 +52,16 @@ async def admin_proc(call: types.CallbackQuery, state: FSMContext):
     elif action == "promo":
         await admin.promo_name.set()
         await call.message.answer("Введите промокод")
+    elif action == "tokens":
+        text = ""
+        res = all_token()
+        for i in res:
+            text += f"Токен: <b>{i['token']}</b>, рабочий: <b>{i['is_used']}</b>\n"
+        await call.message.answer(text, reply_markup= token_kb())
+    elif action == "addtoken":
+        await call.message.answer("Введите токен")
+        await admin.token.set()
+
     else:
         res = all_promo()
         text = "Промокоды:\n"
@@ -59,6 +70,10 @@ async def admin_proc(call: types.CallbackQuery, state: FSMContext):
         await call.message.answer(text)
 
 
+async def token_proc(message: types.Message, state: FSMContext):
+    add_token(message.text)
+    await message.answer("Токен добавлен")
+    await state.finish()
 
 
 async def rassylka(message: types.Message, state: FSMContext):

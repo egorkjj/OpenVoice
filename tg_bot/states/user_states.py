@@ -14,3 +14,4 @@ class admin(StatesGroup):
     promo_name = State()
     promo_act = State()
     promo_gift = State()
+    token = State()

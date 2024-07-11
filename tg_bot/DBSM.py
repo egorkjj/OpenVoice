@@ -29,6 +29,12 @@ class Promos(Base):
     activations = Column(Integer, nullable=True)
     gift = Column(Integer, nullable=True)
 
+class Tokens(Base):
+    __tablename__ = "tokens"
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    token = Column(Text, nullable=True)
+    is_used = Column(Boolean, nullable=True)
+
 def add_new(message: Message, referal, start_msg):
     Session = sessionmaker()
     session = Session(bind = engine)
@@ -171,5 +177,45 @@ def replace_id(chat_id, message_id):
     session.commit()
     session.close()
 
+def add_token(token):
+    Session = sessionmaker()
+    session = Session(bind = engine)
+    new = Tokens(token = token, is_used = True)
+    session.add(new)
+    session.commit()
+    session.close()
+
+def all_token():
+    res = []
+    Session = sessionmaker()
+    session = Session(bind = engine)
+    query = session.query(Tokens).all()
+    for i in query:
+        res.append({
+            "token": i.token,
+            "is_used": "да" if i.is_used else "нет"
+        })
+    session.close()
+    return res
+
+def disable_token(token):
+    Session = sessionmaker()
+    session = Session(bind = engine)
+    curr = session.query(Tokens).filter(Tokens.token == token).first()
+    curr.is_used = False
+    session.commit()
+    session.close()
+
+def all_token_for_neiro():
+    res = []
+    Session = sessionmaker()
+    session = Session(bind = engine)
+    query = session.query(Tokens).filter(Tokens.is_used == True).all()
+    for i in query:
+        res.append(i.token)
+    session.close()
+    return res
+
+    
 Base.metadata.create_all(engine)
 

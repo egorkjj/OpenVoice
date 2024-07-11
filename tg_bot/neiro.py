@@ -1,16 +1,20 @@
-from elevenlabs.client import AsyncElevenLabs, ElevenLabs
-from elevenlabs import save
+from elevenlabs.client import AsyncElevenLabs
 import elevenlabs, string, random, os
 from tinytag import TinyTag
-
+from DBSM import all_token_for_neiro, disable_token
 
 async def OpenVoice(filename: str, text): #filename: str, text
+    tokens = all_token_for_neiro()
+    for i in tokens:
+        try:
+            client = AsyncElevenLabs(
+                api_key= i, 
+            )
+            voice = await client.clone(name = "Jhon", description="Desc", files=[filename], labels = {})
+        except:
+            disable_token(i)
+            pass
 
-    client = AsyncElevenLabs(
-        api_key="sk_2dc9bf9826b00d56293e264d9a04540eb59584e84af7f79e" #"sk_9ef1d1a67b8d7c28ddaf1e2515f8a95b67f9ea471d797274", 
-    )
-    
-    voice = await client.clone(name = "Jhon", description="Desc", files=[filename], labels = {})
     if "tg_bot/user_models/" in filename:
         os.remove(filename)
 
