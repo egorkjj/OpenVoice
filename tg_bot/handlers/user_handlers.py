@@ -27,6 +27,7 @@ def register_handlers(dp: Dispatcher):
     dp.register_callback_query_handler(check_sub, text="check_sub", state = None)
     dp.register_callback_query_handler(my_voice, text="my_voice", state = None)
     dp.register_callback_query_handler(pers, text="pers", state = None)
+    dp.register_callback_query_handler(rules, text="rules", state = None)
     dp.register_callback_query_handler(home, text="home", state = "*")
 
 
@@ -42,6 +43,9 @@ async def cmd_start(message: types.Message, state: FSMContext): #start command
         await message.bot.delete_message(message.chat.id, res)
         replace_id(message.chat.id, start_msg.message_id)
     add_new(message, reference, start_msg.message_id)
+
+async def rules(call: types.CallbackQuery, state: FSMContext):
+    await call.message.edit_text("<b>Как пользоваться ботом?</b>\n\n1) При использовании функции «Переслать сообщение 👤» - перешлите голосовое, желательно не слишком короткое. Качество звука должно быть хорошее, это отразится на результате обработки.\n\n2) Используйте «.» для длинной интонационной паузы. В случае «,», пауза будет небольшой.\n\n<i>Администрация бота не несёт ответственность за распространение аудиоматериалов. Бот создан в развлекательных целях. Распространение поддельного голоса в целях шантажа или мошенничества карается законом РФ.</i>", reply_markup= tohome_kb())
 
 
 async def subscriber_check(id, msg: types.Message): #проверка на то, саб ли человек - НЕ ХЭНДЛЕР!!!!

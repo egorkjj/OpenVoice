@@ -6,6 +6,7 @@ def start_kb():
     kb.add(InlineKeyboardButton(text = "Персонажи 👤", callback_data="pers"))
     kb.add(InlineKeyboardButton(text = "Купить войсы 💵", callback_data="buy"))
     kb.add(InlineKeyboardButton(text = "Получить войсы ➕ ", callback_data="reflink"))
+    kb.add(InlineKeyboardButton(text = "Правила 📝", callback_data= "rules"))
     return kb
 
 def subscribe_kb():
