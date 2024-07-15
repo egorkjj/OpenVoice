@@ -57,7 +57,7 @@ async def send_pay(call: types.CallbackQuery, state: FSMContext):
             title="Покупка войсов",  
             description=f"Пополнение баланса личного кабинета  на {amount} 🎙",  
             prices=prices,  
-            provider_token="live_nGizA-Htyc-zoHX7gR-3_3dbqzNtwK_WiqS-8QWQ-qM",  
+            provider_token="390540012:LIVE:53714",  
             payload=f"{amount}",  
             currency="RUB",  
             reply_markup=pay_kb(price, False),  
