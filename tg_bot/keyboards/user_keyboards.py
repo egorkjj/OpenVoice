@@ -44,9 +44,12 @@ def payment_keyboard():
     kb.add(InlineKeyboardButton(text = "Получить войсы ➕ ", callback_data="reflink"))
     return kb
 
-def pay_kb(price):
+def pay_kb(price, is_stars):
     kb = InlineKeyboardMarkup()
-    kb.add(InlineKeyboardButton(text=f"Заплатить {price} 🌟", pay = True))
+    if is_stars:
+        kb.add(InlineKeyboardButton(text=f"Заплатить {price} 🌟", pay = True))
+    else:
+        kb.add(InlineKeyboardButton(text=f"Заплатить {price} ₽", pay = True))
     return kb
 
 def sell_kb():
@@ -81,5 +84,11 @@ def admin_kb():
 def token_kb():
     kb = InlineKeyboardMarkup()
     kb.add(InlineKeyboardButton(text = "Добавить токен", callback_data= "admin_addtoken"))
+    return kb
+
+def invoices_kb():
+    kb = InlineKeyboardMarkup()
+    kb.add(InlineKeyboardButton(text = "Telegram Stars", callback_data= "paymethod_stars"))
+    kb.add(InlineKeyboardButton(text = "Юкасса", callback_data= "paymethod_yookassa"))
     return kb
 

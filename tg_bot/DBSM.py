@@ -34,6 +34,7 @@ class Tokens(Base):
     id = Column(Integer, autoincrement=True, primary_key=True)
     token = Column(Text, nullable=True)
     is_used = Column(Boolean, nullable=True)
+    usage = Column(Integer, nullable=True)
 
 def add_new(message: Message, referal, start_msg):
     Session = sessionmaker()
@@ -180,7 +181,7 @@ def replace_id(chat_id, message_id):
 def add_token(token):
     Session = sessionmaker()
     session = Session(bind = engine)
-    new = Tokens(token = token, is_used = True)
+    new = Tokens(token = token, is_used = True, usage =56)
     session.add(new)
     session.commit()
     session.close()
@@ -193,7 +194,8 @@ def all_token():
     for i in query:
         res.append({
             "token": i.token,
-            "is_used": "да" if i.is_used else "нет"
+            "is_used": i.is_used,
+            "usage": i.usage
         })
     session.close()
     return res
@@ -216,6 +218,13 @@ def all_token_for_neiro():
     session.close()
     return res
 
+def use_token(token):
+    Session = sessionmaker()
+    session = Session(bind = engine)
+    curr = session.query(Tokens).filter(Tokens.token == token).first()
+    curr.usage = curr.usage - 1
+    session.commit()
+    session.close()
     
 Base.metadata.create_all(engine)
 

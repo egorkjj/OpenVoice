@@ -1,7 +1,7 @@
 from elevenlabs.client import AsyncElevenLabs
 import elevenlabs, string, random, os
 from tinytag import TinyTag
-from tg_bot.DBSM import all_token_for_neiro, disable_token
+from tg_bot.DBSM import all_token_for_neiro, disable_token, use_token
 
 async def OpenVoice(filename: str, text): #filename: str, text
     tokens = all_token_for_neiro()
@@ -10,6 +10,7 @@ async def OpenVoice(filename: str, text): #filename: str, text
             client = AsyncElevenLabs(
                 api_key= i, 
             )
+            use_token(i)
             voice = await client.clone(name = "Jhon", description="Desc", files=[filename], labels = {})
         except:
             disable_token(i)

@@ -6,6 +6,7 @@ class user(StatesGroup):
     pers_text = State()
     curr_text = State()
     promo = State()
+    invoice = State()
 
 class admin(StatesGroup):
     text_rass = State()
