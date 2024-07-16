@@ -92,3 +92,22 @@ def invoices_kb():
     kb.add(InlineKeyboardButton(text = "Юкасса", callback_data= "paymethod_yookassa"))
     return kb
 
+def howtopay():
+    kb = InlineKeyboardMarkup()
+    kb.add(InlineKeyboardButton(text = "Юкасса ₽", callback_data= "pby_yookassa"))
+    kb.add(InlineKeyboardButton(text = "Telegram Stars 🌟", callback_data= "pby_stars"))
+    kb.add(InlineKeyboardButton(text="Главное меню 🏠", callback_data="home"))
+    kb.add(InlineKeyboardButton(text = "Получить войсы ➕ ", callback_data="reflink"))
+    return kb
+
+
+def pay_yookassa_kb():
+    kb = InlineKeyboardMarkup()
+    kb.add(InlineKeyboardButton(text="Купить 6 🎙 за 100 ₽", callback_data= "yoinvoice_6_10000"))
+    kb.add(InlineKeyboardButton(text="Купить 10 🎙 за 150 ₽", callback_data= "yoinvoice_10_15000"))
+    kb.add(InlineKeyboardButton(text="Купить 50 🎙 за 450 ₽", callback_data= "yoinvoice_50_45000"))
+    kb.add(InlineKeyboardButton(text="Купить 200 🎙 за 1200 ₽", callback_data= "yoinvoice_200_120000"))
+    kb.add(InlineKeyboardButton(text="Купить 1000 🎙 за 4400 ₽", callback_data= "yoinvoice_1000_440000"))
+    kb.add(InlineKeyboardButton(text="Главное меню 🏠", callback_data="home"))
+    kb.add(InlineKeyboardButton(text = "Получить войсы ➕ ", callback_data="reflink"))
+    return kb
