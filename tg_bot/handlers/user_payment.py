@@ -27,7 +27,7 @@ async def start_payment(call: types.CallbackQuery, state: FSMContext):
     await call.message.edit_text("Выберите, как вам будет удобнее оплатить 👇", reply_markup= howtopay())
 
 async def howtopay_proc(call: types.CallbackQuery, state: FSMContext):
-    if call.data.split("_") == "stars":
+    if call.data.split("_")[1] == "stars":
         await call.message.answer("Выберите интересующий вас тариф 👇", reply_markup= payment_keyboard())
     else:
         await call.message.answer("Выберите интересующий вас тариф 👇", reply_markup= pay_yookassa_kb())
