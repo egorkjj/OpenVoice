@@ -181,7 +181,7 @@ def replace_id(chat_id, message_id):
 def add_token(token):
     Session = sessionmaker()
     session = Session(bind = engine)
-    new = Tokens(token = token, is_used = True, usage =56)
+    new = Tokens(token = token, is_used = True, usage =65)
     session.add(new)
     session.commit()
     session.close()
