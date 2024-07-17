@@ -134,7 +134,7 @@ async def pers(call: types.CallbackQuery, state: FSMContext):
     
     voices = get_voices_string(call.message.chat.id)
 
-    await call.message.edit_text(f"Выбери интересующую речевую модель ниже 🗣️\n\nВаш баланс: {voices} 🎙\nОдна генерация: 1🎙", reply_markup= pers_kb())
+    await call.message.edit_text(f"Выбери интересующую речевую модель ниже 🗣️\n\nВаш баланс: {voices} 🎙\nОдна генерация: 2🎙", reply_markup= pers_kb())
 
 async def pers_choice(call: types.CallbackQuery, state: FSMContext):
     name = call.data.split("_")[1]
@@ -145,7 +145,7 @@ async def pers_choice(call: types.CallbackQuery, state: FSMContext):
     await user.curr_text.set()
 
 async def pers_final(message: types.Message, state: FSMContext):
-    if get_voices(message.chat.id) < 1:
+    if get_voices(message.chat.id) < 2:
         await message.answer("К сожалению, у вас недостаточно войсов ❌", reply_markup= sell_kb())
         await state.finish()
         return
@@ -158,7 +158,7 @@ async def pers_final(message: types.Message, state: FSMContext):
         pers = data["pers"]
     await state.finish()
     wait = await message.answer("Генерирую голосовое, подождите немного...")
-    minus_voice(message.chat.id, 1)
+    minus_voice(message.chat.id, 2)
     res = await OpenVoice(pers, message.text)
     if is_buy(message.chat.id):
         await message.bot.send_voice(voice = InputFile(res[0]), chat_id= message.chat.id, duration= res[1])

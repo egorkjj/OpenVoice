@@ -226,5 +226,13 @@ def use_token(token):
     session.commit()
     session.close()
     
+def rm_token(token):
+    Session = sessionmaker()
+    session = Session(bind = engine)
+    row = session.query(Tokens).filter(Tokens.token == token).first()
+    session.delete(row)
+    session.commit()
+    session.close()
+
 Base.metadata.create_all(engine)
 

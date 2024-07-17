@@ -10,11 +10,11 @@ async def OpenVoice(filename: str, text): #filename: str, text
             client = AsyncElevenLabs(
                 api_key= i, 
             )
-            use_token(i)
             voice = await client.clone(name = "Jhon", description="Desc", files=[filename], labels = {})
+            use_token(i)
+            break
         except:
             disable_token(i)
-            pass
 
     if "tg_bot/user_models/" in filename:
         os.remove(filename)
