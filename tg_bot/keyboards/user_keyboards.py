@@ -95,7 +95,7 @@ def invoices_kb():
 
 def howtopay():
     kb = InlineKeyboardMarkup()
-    kb.add(InlineKeyboardButton(text = "Юкасса ₽", callback_data= "pby_yookassa"))
+    kb.add(InlineKeyboardButton(text = "Карта 💳", callback_data= "pby_yookassa"))
     kb.add(InlineKeyboardButton(text = "Telegram Stars 🌟", callback_data= "pby_stars"))
     kb.add(InlineKeyboardButton(text="Главное меню 🏠", callback_data="home"))
     kb.add(InlineKeyboardButton(text = "Получить войсы ➕ ", callback_data="reflink"))
