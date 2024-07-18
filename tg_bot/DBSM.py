@@ -20,7 +20,6 @@ class User(Base):
     referal = Column(Text, nullable=True)
     is_ref_voices = Column(Boolean, nullable=True)
     is_buy = Column(Boolean, nullable=True)
-    start_msg = Column(Integer, nullable=True)
 
 class Promos(Base):
     __tablename__ = "promos"
@@ -36,11 +35,11 @@ class Tokens(Base):
     is_used = Column(Boolean, nullable=True)
     usage = Column(Integer, nullable=True)
 
-def add_new(message: Message, referal, start_msg):
+def add_new(message: Message, referal):
     Session = sessionmaker()
     session = Session(bind = engine)
     try:
-        new = User(username = message.from_user.username, chat_id = message.chat.id, voices = 10, is_ref_voices = False, referal = referal, start_msg = start_msg)
+        new = User(username = message.from_user.username, chat_id = message.chat.id, voices = 10, is_ref_voices = False, referal = referal)
         session.add(new)
         session.commit()
     except:
@@ -159,24 +158,6 @@ def is_buy(chat_id):
     session.close()
     return is_by
 
-def get_start_msg(chat_id):
-    Session = sessionmaker()
-    session = Session(bind = engine)
-    curr = session.query(User).filter(User.chat_id == chat_id).first()
-    if curr is None:
-        session.close()
-        return None
-    id = curr.start_msg
-    session.close()
-    return id
-
-def replace_id(chat_id, message_id):
-    Session = sessionmaker()
-    session = Session(bind = engine)
-    curr = session.query(User).filter(User.chat_id == chat_id).first()
-    curr.start_msg = message_id
-    session.commit()
-    session.close()
 
 def add_token(token):
     Session = sessionmaker()
