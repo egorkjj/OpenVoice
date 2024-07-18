@@ -40,7 +40,6 @@ async def admin_proc(call: types.CallbackQuery, state: FSMContext):
             except:
                 pass
             usersDead = len(set(users))-len(set(usersAlive))
-            await waitmsg.delete()
             await call.message.answer(f"""
                 <b>Статистика</b>👤 Всего пользователей: {str(len(users))}\n🟢 Активных пользователей: {str(len(usersAlive))}\n🔴 Неактивных пользователей: {str(usersDead)}
             """)
