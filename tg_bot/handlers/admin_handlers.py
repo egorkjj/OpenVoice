@@ -57,7 +57,7 @@ async def admin_proc(call: types.CallbackQuery, state: FSMContext):
         text = "Токены:\n"
         res = all_token()
         for i in res:
-            text += f"Токен: <b>{i['token']}</b>, <b>нерабочий ❌</b>\n" if not i["is_used"] else f"Токен: <b>{i['token']}</b>, <b>осталось активаций: {i['usage']}</b>\n"  
+            text += f"Токен: <b>{i['token']}</b>, <b>нерабочий ❌</b>, <b>осталось активаций: {i['usage']}</b>\n" if not i["is_used"] else f"Токен: <b>{i['token']}</b>, <b>осталось активаций: {i['usage']}</b>\n"  
         await call.message.answer(text, reply_markup= token_kb())
     elif action == "addtoken":
         await call.message.answer("Введите токен")

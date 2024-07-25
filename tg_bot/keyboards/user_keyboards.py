@@ -30,6 +30,7 @@ def pers_kb():
     kb.row(InlineKeyboardButton(text="Путин 👤", callback_data="curr_putin"), InlineKeyboardButton(text="Пригожин 👤", callback_data="curr_prigozhin"))
     # kb.add(InlineKeyboardButton(text="Путин 👤", callback_data="curr_putin"))
     # kb.add(InlineKeyboardButton(text="Пригожин 👤", callback_data="curr_prigozhin"))
+    kb.add(InlineKeyboardButton(text ="Тиньков 👤", callback_data= "curr_tinkov"))
     kb.add(InlineKeyboardButton(text="Главное меню 🏠", callback_data="home"))
     return kb
 

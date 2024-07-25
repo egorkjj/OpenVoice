@@ -15,7 +15,8 @@ names_js = {
     "burunov": "Бурунов",
     "moriarty": "Мориарти",
     "prigozhin": "Пригожин",
-    "drevniy": "Древний Рус"
+    "drevniy": "Древний Рус",
+    "tinkov": "Олег Тиньков"
 }
 
 def register_handlers(dp: Dispatcher):
