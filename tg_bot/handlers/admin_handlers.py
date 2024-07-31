@@ -112,7 +112,7 @@ async def promo_step1(message: types.Message, state: FSMContext):
 
 async def promo_step3(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
-        add_promo(data["promo_name"], data["promo_act"], int(message.text))
+        add_promo(data["promo_name"], int(message.text))
     await message.answer("Промокод добавлен")
     await state.finish()
 
