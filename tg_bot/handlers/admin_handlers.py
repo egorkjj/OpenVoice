@@ -16,7 +16,6 @@ def register_admin_handlers(dp: Dispatcher):
     dp.register_message_handler(bonus_step2, state= admin.bonus)
 
     dp.register_message_handler(promo_step1, state = admin.promo_name)
-    dp.register_message_handler(promo_step2, state = admin.promo_act)
     dp.register_message_handler(promo_step3, state = admin.promo_gift)
 
     dp.register_message_handler(token_proc, state = admin.token)
@@ -69,7 +68,7 @@ async def admin_proc(call: types.CallbackQuery, state: FSMContext):
         res = all_promo()
         text = "Промокоды:\n"
         for i in res:
-            text += f"название: <b>{i.name}</b>, активаций осталось: <b>{i.activations}</b>, кол-во валюты за активацию: <b>{i.gift}</b>\n"
+            text += f"название: <b>{i.name}</b>, кол-во валюты за активацию: <b>{i.gift}</b>\n"
         await call.message.answer(text)
 
 
@@ -107,14 +106,9 @@ async def bonus_step2(message: types.Message, state: FSMContext):
 async def promo_step1(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["promo_name"] = message.text
-    await admin.promo_act.set()
-    await message.answer("Введите количество активаций промокода")
-
-async def promo_step2(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        data["promo_act"] = int(message.text)
     await admin.promo_gift.set()
     await message.answer("Теперь введите количество валюты, которое будет даваться за активацию")
+
 
 async def promo_step3(message: types.Message, state: FSMContext):
     async with state.proxy() as data:

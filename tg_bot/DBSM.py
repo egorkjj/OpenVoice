@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, Text, Boolean
+from sqlalchemy import create_engine, Column, Integer, Text, Boolean, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from aiogram.types import Message
@@ -27,6 +27,7 @@ class Promos(Base):
     name = Column(Text, nullable=True, unique=True)
     activations = Column(Integer, nullable=True)
     gift = Column(Integer, nullable=True)
+    users_used = Column(JSON, nullable = True)
 
 class Tokens(Base):
     __tablename__ = "tokens"
@@ -99,16 +100,19 @@ def promo_info(promo, username):
     Session = sessionmaker()
     session = Session(bind = engine)
     curr = session.query(Promos).filter(Promos.name == promo).first()
+    lis = list(curr.users_used["data"])
     if curr is None:
         session.close()
-        return [False, "К сожкалению, такого промокода не существует("]
-    elif curr.activations == 0:
+        return [False, "К сожалению, такого промокода не существует("]
+    elif username in lis:
         session.close()
-        return [False, "К сожалению, у этого промокода закончились активации("]
+        return [False, "К сожалению, вы уже активировали этот промокод()"]
     else:
+        lis.append(username)
         gift = curr.gift
         curr_user = session.query(User).filter(User.username == username).first()
         curr_user.voices = curr_user.voices + gift
+        curr.users_used = {"data":lis}
         session.commit()
         session.close()
         return [True, gift]
@@ -135,10 +139,10 @@ def bonus(username, bonus):
     session.commit()
     session.close()
 
-def add_promo(name, act, gift):
+def add_promo(name, gift):
     Session = sessionmaker()
     session = Session(bind = engine)
-    new = Promos(name = name, activations = act, gift = gift)
+    new = Promos(name = name, gift = gift, users_used = {"data": []})
     session.add(new)
     session.commit()
     session.close()
@@ -214,6 +218,17 @@ def rm_token(token):
     session.delete(row)
     session.commit()
     session.close()
+
+Session = sessionmaker()
+session = Session(bind = engine)
+allp = session.query(Promos).all()
+for i in allp:
+    session.delete(i)
+    session.commit()
+
+session.execute("ALTER TABLE promos ADD COLUMN users_used JSON NULL")
+session.commit()
+session.close()
 
 Base.metadata.create_all(engine)
 

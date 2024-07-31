@@ -20,7 +20,6 @@ names_js = {
 }
 
 def register_handlers(dp: Dispatcher):
-
     dp.register_message_handler(cmd_start, commands=["start"], state = "*")
     dp.register_message_handler(my_voice_step1, content_types=types.ContentType.VOICE, state = user.my_voice_voice)
     dp.register_message_handler(my_voice_step2, state = user.my_voice_text)
@@ -49,9 +48,12 @@ async def rules(call: types.CallbackQuery, state: FSMContext):
 
 async def subscriber_check(id, msg: types.Message): #проверка на то, саб ли человек - НЕ ХЭНДЛЕР!!!!
     data = await msg.bot.get_chat_member(chat_id="@voicefusion", user_id= id)
-    res = data["status"] != "left"
+    data1 = await msg.bot.get_chat_member(chat_id  ="@powar_putina", user_id= id)
+    res1 = data["status"] != "left"
+    res2 = data1["status"] != "left"
+    res = res1 and res2
     if not res:
-        await msg.answer("Для продолжения работы в боте, подпишитесь на наш канал @voicefusion", reply_markup= subscribe_kb())
+        await msg.answer("Для продолжения работы в боте, подпишитесь на наши каналы: @voicefusion, @powar_putina", reply_markup= subscribe_kb())
         return False
     else:
         return True
@@ -66,10 +68,16 @@ async def home(call: types.CallbackQuery, state: FSMContext): #tohome
 
 async def check_sub(call: types.CallbackQuery, state: FSMContext): #check sub from reply_markup
     data = await call.message.bot.get_chat_member(chat_id="@voicefusion", user_id= call.from_user.id)
-    if data["status"] != "left":
+    data1 = await call.message.bot.get_chat_member(chat_id  ="@powar_putina", user_id= call.from_user.id)
+
+    res1 = data["status"] != "left"
+    res2 = data1["status"] != "left"
+    res = res1 and res2
+
+    if res:
         await call.message.edit_text("Благодарим за подписку. Теперь можно продолжить)", reply_markup=None)
     else:
-        await call.message.edit_text("К сожалению, вы еще не подписаны(\nДля продолжения работы в боте, подпишись на наш канал @voicefusion", reply_markup=subscribe_kb())
+        await call.message.edit_text("К сожалению, вы еще не подписаны(\nДля продолжения работы в боте, подпишись на наши каналы: @voicefusion, @powar_putina", reply_markup=subscribe_kb())
 
 
 
