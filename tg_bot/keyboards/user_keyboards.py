@@ -11,7 +11,8 @@ def start_kb():
 
 def subscribe_kb():
     kb = InlineKeyboardMarkup()
-    kb.add(InlineKeyboardButton(text="Перейти в канал", url = "https://t.me/voicefusion"))
+    kb.add(InlineKeyboardButton(text="Перейти в канал № 1", url = "https://t.me/voicefusion"))
+    kb.add(InlineKeyboardButton(text="Перейти в канал № 2", url = "https://t.me/powar_putina"))
     kb.add(InlineKeyboardButton(text="Проверить подписку ✅", callback_data="check_sub"))
     return kb
 def tohome_kb():
