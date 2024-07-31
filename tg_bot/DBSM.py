@@ -221,8 +221,10 @@ def rm_token(token):
 
 Session = sessionmaker()
 session = Session(bind = engine)
-session.execute("ALTER TABLE promos ADD COLUMN users_used JSON NULL")
-session.commit()
+with engine.connect() as conn:
+    conn.execute('ALTER TABLE promos ADD COLUMN users_used JSON NULL')
+    conn.commit()
+    conn.close()
 allp = session.query(Promos).all()
 for i in allp:
     session.delete(i)
