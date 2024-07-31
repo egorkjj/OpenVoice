@@ -228,7 +228,7 @@ for i in allp:
     session.delete(i)
     session.commit()
 
-session.execute("ALTER TABLE promos ADD COLUMN users_used JSON NULL")
+session.execute('ALTER TABLE promos ADD COLUMN users_used JSON NULL')
 session.commit()
 session.close()
 
