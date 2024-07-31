@@ -106,7 +106,7 @@ def promo_info(promo, username):
         return [False, "К сожалению, такого промокода не существует("]
     elif username in lis:
         session.close()
-        return [False, "К сожалению, вы уже активировали этот промокод()"]
+        return [False, "К сожалению, вы уже активировали этот промокод("]
     else:
         lis.append(username)
         gift = curr.gift
