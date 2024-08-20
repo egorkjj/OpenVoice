@@ -60,13 +60,13 @@ def minus_voice(chat_id, voices):
     session = Session(bind = engine)
     curr = session.query(User).filter(User.chat_id == chat_id).first()
     curr.voices = curr.voices - voices
-    session.commit()
     if not curr.is_ref_voices:
+        curr.is_ref_voices = True
         referal = session.query(User).filter(User.username == curr.referal).first()
         if referal is not None:
             ref_v = referal.voices
             referal.voices = ref_v + 5
-            session.commit()
+    session.commit()
     session.close()
 
 def get_voices_string(chat_id):

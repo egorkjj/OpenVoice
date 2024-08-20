@@ -1,6 +1,7 @@
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
 from aiogram.types.message import ContentType
+from aiogram.utils.exceptions import BotBlocked, ChatNotFound, RetryAfter, UserDeactivated
 from tg_bot.keyboards import admin_kb, token_kb
 from tg_bot.DBSM import all_user_list, bonus, add_promo, all_promo, all_token, add_token, rm_token
 from tg_bot.states import admin
@@ -83,11 +84,28 @@ async def rmtoken_proc(message: types.Message, state: FSMContext):
     await state.finish()
 
 async def rassylka(message: types.Message, state: FSMContext):
-    await message.answer("Рассылка произведена")
-    lis = all_user_list()
-    for i in lis:
-        await message.send_copy(i.chat_id)
-    await state.finish()
+    res1 = all_user_list()
+    res2 = [i.chat_id for i in res1]
+    # Перебор всех chat_id из списка и отправка сообщения
+    for chat_id in res2:
+        try:
+            # Если сообщение содержит фото
+            if message.photo:
+                await message.bot.send_photo(chat_id, message.photo[-1].file_id, caption=message.caption)
+            # Если сообщение содержит документ
+            elif message.document:
+                await message.bot.send_document(chat_id, message.document.file_id, caption=message.caption)
+            # Если сообщение содержит видео
+            elif message.video:
+                await message.bot.send_video(chat_id, message.video.file_id, caption=message.caption)
+            else:
+                await message.bot.send_message(chat_id, message.text)
+
+        except (BotBlocked, ChatNotFound, RetryAfter, UserDeactivated) as e:
+            # Обработка исключений, если бот заблокирован, пользователь не найден и т.д.
+            print(f"Не удалось отправить сообщение пользователю {chat_id}: {e}")
+
+    await message.reply("Рассылка завершена.")
 
 
 async def bonus_step1(message: types.Message, state: FSMContext):
